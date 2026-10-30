@@ -2,6 +2,8 @@
 (function(){
 'use strict';
 const g=K.g,TAU=Math.PI*2,M=MAMA;K.ns='mmbh2';
+/* large print: UI text never below 24px (Helene rule) */
+const _KT=K.text;K.text=function(s,x,y,sz,c,o){if(sz>=14*K.S&&sz<24*K.S&&!(o&&o.art))sz=24*K.S;return _KT.call(this,s,x,y,sz,c,o)};
 const COLS='BINGO';
 const PHRASES={1:"Mama's wee one",2:"Two wee lambs",3:"Three in a kirk pew",4:"Four coos at the door",5:"Five loaves for the crowd",6:"Half a dozen scones",7:"Lucky seven, Heaven sent",8:"Eight bales of hay",9:"Nine o'clock tea",10:"Ten commandments",11:"Legs eleven, coo's legs!",12:"Twelve disciples",13:"Baker's dozen shortbread",14:"Fourteen ewes in the fold",15:"Fifteen bonny thistles",
 16:"Sweet sixteen",17:"Seventeen tartan scarves",18:"Eighteen bells a-ringing",19:"Nineteen, Mama's knitting",20:"Twenty sheep in the glen",21:"Key of the door",22:"Two wee ducks",23:"The Lord's my shepherd",24:"Two dozen eggs",25:"Christmas Day",26:"Half a crown",27:"Gateway to Heaven",28:"Twenty-eight days of porridge",29:"Rise and shine",30:"Dirty Gertie the donkey",
@@ -82,7 +84,7 @@ function storyScene(done){const sc=(f)=>t=>{hallBg(HALLS[0]);const fy=K.H*.62;g.
   {who:'Mama MacGregor',text:"Hello, dearie! Welcome back to the Kirk Hall. Pull up a chair, the tea is on.",draw:sc((t,fy)=>{const m=M.draw(K.W/2,fy,mh(),{mode:'wave',talk:1})})},
   {who:'Mama MacGregor',text:"I'll call the numbers. Your card marks itself, so you just watch for the gold BINGO button.",draw:sc((t,fy)=>{M.draw(K.W*.35,fy,mh(),{mode:'call',talk:1});ballArt(K.W*.72,fy-mh()*.7,40*K.S,22)})},
   {who:'Mama MacGregor',text:"When BINGO glows gold, tap it quick, before Big Jock shouts!",draw:sc((t,fy)=>{M.draw(K.W*.3,fy,mh(),{mode:'point',talk:1});K.button({id:'demo',x:K.W*.52,y:fy-mh()*.6,w:K.W*.42,h:70*K.S,label:'BINGO!',color:BC.gold,instant:true,cb:()=>{}})})},
-  {who:'Mama MacGregor',text:"Win games for coins and stars, and you'll open up new halls. Off we go!",draw:sc((t,fy)=>{M.draw(K.W*.5,fy,mh(),{mode:'dance'});M.coo(K.W*.17,fy,mh()*.3,{dir:1,ph:t/40,moving:true});M.donkey(K.W*.84,fy,mh()*.3,{dir:-1,ph:t/40,moving:true})})}],done,{fs:23,edge:'#2b8a3e'})}
+  {who:'Mama MacGregor',text:"Win games for coins and stars, and you'll open up new halls. Off we go!",draw:sc((t,fy)=>{M.draw(K.W*.5,fy,mh(),{mode:'dance'});M.coo(K.W*.17,fy,mh()*.3,{dir:1,ph:t/66,moving:true});M.donkey(K.W*.84,fy,mh()*.3,{dir:-1,ph:t/66,moving:true})})}],done,{fs:26,edge:'#2b8a3e'})}
 /* -------- HALLS (level select) */
 const Halls={draw(){const S=K.S,W=K.W,H=K.H,sf=K.safe,P=K.portrait;hallBg(HALLS.find(h=>h.id===SV.hall));const lv=lvlOf(SV.xp).l;
   K.button({id:'back',x:sf.l+10*S,y:sf.t+10*S,w:110*S,h:56*S,label:'⬅ Back',color:BC.grey,fs:22*S,cb:()=>K.go(Title)});K.text('Level Select',W/2+50*S,sf.t+38*S,30*S,'#fff');
@@ -108,9 +110,10 @@ const Opts={draw(){const S=K.S,W=K.W,H=K.H,sf=K.safe;hallBg(HALLS[0]);K.button({
    r[1].forEach((o,j)=>bigBtn({id:'o'+i+'-'+j,x:x+j*(bw+gap),y:y+34*S,w:bw,h:Math.min(62*S,rh-44*S),label:o[0],color:o[2]?BC.green:'#868e96',fs:24*S,cb:()=>{o[1]();save()}}))})},back(){K.go(Title)}};
 /* -------- HELP */
 const Help={draw(){const S=K.S,W=K.W,H=K.H,sf=K.safe;hallBg(HALLS[0]);K.button({id:'back',x:sf.l+10*S,y:sf.t+10*S,w:110*S,h:56*S,label:'⬅ Back',color:BC.grey,fs:22*S,cb:()=>K.go(Title)});
-  const bw=Math.min(W-30*S,640*S),x=(W-bw)/2,y=sf.t+78*S,h=H-y-sf.b-14*S;panel(x,y,bw,h);
-  const L=['Tap PLAY BINGO. Mama calls the numbers.','LEVEL SELECT: pick a hall and how many cards, then tap START.','Your card marks itself (change it with the ⚙️ button).','When the BINGO button glows gold, tap it!','Each game has a shape to make. It shows at the top.','Win games for coins and stars. Stars open new halls.','Helpers: 🐮 marks a square, 🐑 lets you mark any square, 🕊️ shows the next balls, 🐴 doubles the prize.','Golden balls give bonus coins.','Pretend coins only. Nothing to buy.'];
-  let yy=y+20*S;const fs=Math.min(22*S,h/(L.length*2.4));for(const l of L){yy+=K.textBox('• '+l,x+18*S,yy,bw-36*S,fs,'#2a2a2a',{al:'left',w:700,stroke:false})+fs*.45}},back(){K.go(Title)}};
+  const LP=!K.portrait,bw=LP?Math.min(W-sf.l-sf.r-150*S,720*S):Math.min(W-30*S,640*S),x=LP?sf.l+136*S:(W-bw)/2,y=LP?sf.t+10*S:sf.t+78*S,h=H-y-sf.b-(LP?10:14)*S;panel(x,y,bw,h);
+  const L=['Tap PLAY BINGO to start.','Your card marks itself (⚙️ to change).','BINGO glows gold? Tap it!','Make the shape shown at the top.','Win coins and stars to open new halls.','LEVEL SELECT: pick a hall, then START.','Helpers: 🐮 mark one, 🐑 mark any, 🕊️ peek, 🐴 double.','Pretend coins only.'];
+  const cols=K.portrait?1:2,cw=(bw-36*S)/cols,per=Math.ceil(L.length/cols);let fs=24*S;const hOf=f=>{let m=0;for(let c=0;c<cols;c++){let t=0;for(const l of L.slice(c*per,c*per+per))t+=K.wrap('• '+l,cw-12*S,f,700).length*f*1.25+f*.4;m=Math.max(m,t)}return m};if(K.portrait)while(hOf(fs*1.08)<h-40*S&&fs<30*S)fs*=1.08;
+  for(let c=0;c<cols;c++){let yy=y+16*S+fs*.6;for(const l of L.slice(c*per,c*per+per)){yy+=K.textBox('• '+l,x+18*S+c*cw,yy,cw-12*S,fs,'#2a2a2a',{al:'left',w:700,stroke:false})+fs*.4}}},back(){K.go(Title)}};
 /* -------- PLAY */
 function mkCard(){const nums=[[],[],[],[],[]];for(let c=0;c<5;c++){const pool=[];for(let k=1;k<=15;k++)pool.push(c*15+k);for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}for(let r=0;r<5;r++)nums[r][c]=pool[r]}nums[2][2]=0;return{nums,m:bit(2,2),flash:{}}}
 const has=(m,P)=>P.masks.some(k=>(m&k)===k);
@@ -153,15 +156,15 @@ const Play={play:true,
   SV.xp+=res.win?40:10;SV.games++;save();G.res=res;G.game++;
   setTimeout(()=>{if(K.scene===Play)K.go(Between,res)},res.win?1600:1200)},
  lay(){const S=K.S,W=K.W,H=K.H,sf=K.safe,P=K.portrait;const L={};
-  if(P){L.top={x:0,y:0,w:W,h:sf.t+58*S};L.caller={x:8*S,y:L.top.h+6*S,w:W-16*S,h:150*S};L.pat={x:8*S,y:L.caller.y+L.caller.h+6*S,w:W-16*S,h:58*S};
+  if(P){L.top={x:0,y:0,w:W,h:sf.t+64*S};L.caller={x:8*S,y:L.top.h+6*S,w:W-16*S,h:150*S};L.pat={x:8*S,y:L.caller.y+L.caller.h+6*S,w:W-16*S,h:66*S};
    L.bingo={x:10*S,y:H-sf.b-84*S,w:W-20*S,h:76*S};L.pow={x:10*S,y:L.bingo.y-70*S,w:W-20*S,h:62*S};L.cards={x:8*S,y:L.pat.y+L.pat.h+8*S,w:W-16*S,h:L.pow.y-8*S-(L.pat.y+L.pat.h+8*S)}}
-  else{const lw=Math.min(W*.44,420*S);L.top={x:0,y:0,w:W,h:sf.t+50*S};L.caller={x:sf.l+8*S,y:L.top.h+4*S,w:lw,h:Math.min(140*S,H*.34)};L.pat={x:sf.l+8*S,y:L.caller.y+L.caller.h+6*S,w:lw,h:52*S};
+  else{const lw=Math.min(W*.44,420*S);L.top={x:0,y:0,w:W,h:sf.t+58*S};L.caller={x:sf.l+8*S,y:L.top.h+4*S,w:lw,h:Math.min(130*S,H*.31)};L.pat={x:sf.l+8*S,y:L.caller.y+L.caller.h+6*S,w:lw,h:60*S};
    L.pow={x:sf.l+8*S,y:L.pat.y+L.pat.h+8*S,w:lw,h:Math.min(56*S,H-sf.b-(L.pat.y+L.pat.h+8*S)-8*S)};L.cards={x:sf.l+lw+18*S,y:L.top.h+4*S,w:W-sf.l-sf.r-lw-26*S,h:H-L.top.h-sf.b-10*S};const by=L.pow.y+L.pow.h+8*S;L.bingo={x:sf.l+8*S,y:by,w:lw,h:Math.max(56*S,H-sf.b-by-8*S)}}
   return L},
  draw(){if(!G)return;const S=K.S,W=K.W,H=K.H,sf=K.safe,L=this.lay();hallBg(G.hall);
   // top bar
-  g.fillStyle='rgba(0,0,0,.45)';g.fillRect(0,0,W,L.top.h);const ty=sf.t+(L.top.h-sf.t)/2;K.text(G.hall.n,sf.l+12*S,ty-9*S,20*S,'#fff',{al:'left',maxW:W*.5});
-  K.text('Game '+Math.min(G.game+1,5)+' of 5  ·  🪙 '+SV.coins,sf.l+12*S,ty+13*S,16*S,'#ffe08a',{al:'left',maxW:W*.55});
+  g.fillStyle='rgba(0,0,0,.45)';g.fillRect(0,0,W,L.top.h);const ty=sf.t+(L.top.h-sf.t)/2;K.text(G.hall.n,sf.l+12*S,ty-13*S,24*S,'#fff',{al:'left',maxW:W-90*S});
+  K.text('Game '+Math.min(G.game+1,5)+' of 5  ·  🪙 '+SV.coins,sf.l+12*S,ty+15*S,24*S,'#ffe08a',{al:'left',maxW:W-90*S});
   const pb=46*S;K.button({id:'pause',x:W-sf.r-pb-10*S,y:ty-pb/2,w:pb,h:pb,r:pb/2,label:'⏸',fs:20*S,color:'#e8590c',cb:()=>this.pause()});
   // caller: Mama + cage + ball + bubble
   const C=L.caller;g.save();K.rr(C.x,C.y,C.w,C.h,16*S);g.fillStyle='rgba(0,0,0,.28)';g.fill();g.restore();
@@ -170,11 +173,11 @@ const Play={play:true,
   for(let i=0;i<5;i++){const a=G.t*3+i*1.3;M.E(cgx+Math.cos(a)*cr*.5,cgy+Math.sin(a*1.3)*cr*.4,cr*.14,cr*.14,['#1c7ed6','#e03131','#adb5bd','#2f9e44','#f59f00'][i])}
   if(G.cur){const e=K.ease(G.ballAnim);const bx=K.lerp(cgx,cgx+cr*2.3,e),by=K.lerp(cgy,C.y+C.h*.5,e),br=Math.min(C.h*.36,52*S)*(.5+.5*e);ballArt(bx,by,br,G.cur,{gold:G.cur===G.golden})}
   const bx0=cgx+cr*2.3+Math.min(C.h*.36,52*S)+10*S,bw=C.x+C.w-bx0-8*S;if(bw>60*S){g.save();K.rr(bx0,C.y+10*S,bw,C.h-20*S,14*S);g.fillStyle='#fffaf0';g.fill();g.restore();
-   const fs=(SV.big===2?24:21)*S;const txt=G.msgT>0?G.msg:'';K.textBox(txt,bx0+bw/2,C.y+C.h/2,bw-16*S,Math.min(fs,(C.h-30*S)/3.4),'#222',{vc:true,stroke:false,w:700})}
+   const fs=(SV.big===2?28:24)*S;const txt=G.msgT>0?G.msg:'';K.textBox(txt,bx0+bw/2,C.y+C.h/2,bw-16*S,Math.max(Math.min(fs,(C.h-20*S)/3.4),20*S),'#222',{vc:true,stroke:false,w:700})}
   // pattern + recent
   const Pn=L.pat;g.save();K.rr(Pn.x,Pn.y,Pn.w,Pn.h,12*S);g.fillStyle='rgba(0,0,0,.35)';g.fill();g.restore();const ms=Pn.h-12*S,cs=ms/5;const mk=G.P.masks[(Math.floor(G.t/1.2))%G.P.masks.length];
   for(let r=0;r<5;r++)for(let c=0;c<5;c++){g.fillStyle=(mk&bit(r,c))?'#ffd43b':'rgba(255,255,255,.25)';g.fillRect(Pn.x+8*S+c*cs,Pn.y+6*S+r*cs,cs-1.5*S,cs-1.5*S)}
-  K.text(G.P.n,Pn.x+ms+20*S,Pn.y+Pn.h*.33,22*S,'#fff',{al:'left',maxW:Pn.w*.45});K.text('Prize 🪙 '+(G.P.prize*(G.dbl?2:1)*(1+G.hall.lvl*.1)|0),Pn.x+ms+20*S,Pn.y+Pn.h*.73,17*S,'#ffe08a',{al:'left'});
+  K.text(G.P.n,Pn.x+ms+20*S,Pn.y+Pn.h*.3,24*S,'#fff',{al:'left',maxW:Pn.w*.45});K.text('Prize 🪙 '+(G.P.prize*(G.dbl?2:1)*(1+G.hall.lvl*.1)|0),Pn.x+ms+20*S,Pn.y+Pn.h*.74,24*S,'#ffe08a',{al:'left',maxW:Pn.w*.45});
   const rec=G.called.slice(-4).reverse();const rr=Math.min(Pn.h*.4,22*S);rec.forEach((n,i)=>{if(i===0)return;ballArt(Pn.x+Pn.w-rr-6*S-(i-1)*(rr*2+6*S),Pn.y+Pn.h/2,rr,n)});
   if(G.peek>0){K.text('Next: '+G.deck.slice(G.di,G.di+G.peek).map(n=>letter(n)+n).join('  '),Pn.x+Pn.w-8*S,Pn.y-8*S,16*S,'#b2f2bb',{al:'right'})}
   // cards
@@ -214,7 +217,7 @@ const Play={play:true,
 const Between={enter(res){this.res=res;this.done=G.game>=5;if(this.done){const st=G.wins;SV.stars[G.hall.id]=Math.max(SV.stars[G.hall.id]||0,st);save()}K.music.play(SONG)},
  draw(){const S=K.S,W=K.W,H=K.H,sf=K.safe,P=K.portrait,r=this.res;hallBg(G.hall);
   const floorY=P?H*.52:H-sf.b-14*S,mh=P?Math.min(H*.3,W*.55):Math.min(H*.6,W*.3);const m=M.draw(P?W/2:W*.22,floorY,mh,{mode:r.win?'dance':'idle',talk:1});K.markChar(m.x,m.y,m.w,m.h,'mama');
-  if(r.win){const c=M.coo(P?W*.16:W*.07+mh*.1,floorY,mh*.34,{dir:1,ph:K.t*1.6,moving:true});K.markChar(c.x,c.y,c.w,c.h,'coo')}
+  if(r.win){const c=M.coo(P?W*.16:W*.07+mh*.1,floorY,mh*.34,{dir:1,ph:K.t*.9,moving:true});K.markChar(c.x,c.y,c.w,c.h,'coo')}
   g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,floorY,W,4*S);
   const cx=P?W/2:W*.64,tw=P?W-30*S:W*.6;K.text(r.win?(r.share?'Shared BINGO!':'BINGO! You won!'):r.who==='Nobody'?'No winner this time':r.who+' won this one',cx,sf.t+46*S,34*S,r.win?'#ffd43b':'#fff',{maxW:tw});
   K.text(r.win?'🪙 +'+r.prize+(r.pow?'   + '+POW.find(p=>p.k===r.pow).ic+' helper':''):'So close! Better luck next game, dearie.',cx,sf.t+94*S,22*S,'#fff',{maxW:tw});
